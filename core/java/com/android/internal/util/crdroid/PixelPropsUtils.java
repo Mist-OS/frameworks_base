@@ -50,7 +50,9 @@ public class PixelPropsUtils {
             "com.google.android.apps.wallpaper",
             "com.google.android.apps.privacy.wildlife",
             "com.google.android.apps.subscriptions.red",
-            "com.google.android.inputmethod.latin"
+            "com.google.android.inputmethod.latin",
+            "com.google.android.gms.persistent",
+            "com.google.android.as"
     };
 
     private static final String[] packagesToChangePixelXL = {
