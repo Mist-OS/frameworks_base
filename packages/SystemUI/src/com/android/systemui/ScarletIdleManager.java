@@ -65,7 +65,6 @@ public class ScarletIdleManager {
 
         mStartManagerInstance = new Runnable() {
             public void run() {
-                    syncHandler(false);
                     powerSaverHandler(true);
                     killBackgroundProcesses();
             }
@@ -97,10 +96,6 @@ public class ScarletIdleManager {
         }
     }
 
-    public static void syncHandler(boolean enable) {
-        ContentResolver.setMasterSyncAutomatically(enable);
-    }
-
     public static void powerSaverHandler(boolean enable) {
         LocationController mController = Dependency.get(LocationController.class);
         mController.setLocationEnabled(!enable);
@@ -117,7 +112,6 @@ public class ScarletIdleManager {
 
     public static void onScreenWake(Context mContext) {
         h.removeCallbacks(mStopManagerInstance);
-        syncHandler(true);
         powerSaverHandler(false);
         PowerManagerInternal mLocalPowerManager = LocalServices.getService(PowerManagerInternal.class);
         if (mLocalPowerManager != null) {
