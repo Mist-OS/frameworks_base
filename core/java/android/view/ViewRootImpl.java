@@ -5154,9 +5154,8 @@ public final class ViewRootImpl implements ViewParent,
         mAccessibilityFocusedHost = view;
         mAccessibilityFocusedVirtualView = node;
 
-        if (mAttachInfo.mThreadedRenderer != null) {
-            mAttachInfo.mThreadedRenderer.invalidateRoot();
-        }
+        requestInvalidateRootRenderNode();
+        invalidate();
     }
 
     boolean hasPointerCapture() {
@@ -8198,7 +8197,7 @@ public final class ViewRootImpl implements ViewParent,
         }
 
         mLastTransformHint = transformHint;
-      
+
         mSurfaceControl.setTransformHint(transformHint);
 
         if (mAttachInfo.mContentCaptureManager != null) {
