@@ -38,6 +38,7 @@ public class PixelPropsUtils {
     private static final Map<String, Object> propsToChange;
     private static final Map<String, Object> propsToChangePixel5;
     private static final Map<String, Object> propsToChangePixel7Pro;
+    private static final Map<String, Object> propsToChangePixel7;
     private static final Map<String, Object> propsToChangePixelXL;
     private static final Map<String, Object> propsToChangeROG1;
     private static final Map<String, Object> propsToChangeXP5;
@@ -50,9 +51,13 @@ public class PixelPropsUtils {
             "com.google.android.apps.wallpaper",
             "com.google.android.apps.privacy.wildlife",
             "com.google.android.apps.subscriptions.red",
-            "com.google.android.inputmethod.latin",
-            "com.google.android.gms.persistent",
-            "com.google.android.as"
+    };
+
+    private static final String[] packagesToChangePixel7 = {
+        "com.google.android.inputmethod.latin",
+        "com.google.android.gms.persistent",
+        "com.google.android.dialer",
+        "com.google.android.as"
     };
 
     private static final String[] packagesToChangePixelXL = {
@@ -90,7 +95,6 @@ public class PixelPropsUtils {
             "com.google.android.MTCL83",
             "com.google.android.UltraCVM",
             "com.google.android.apps.cameralite",
-            "com.google.android.dialer",
             "com.google.android.euicc",
             "com.google.ar.core",
             "com.google.android.youtube",
@@ -167,6 +171,13 @@ public class PixelPropsUtils {
         propsToChangePixel7Pro.put("PRODUCT", "cheetah");
         propsToChangePixel7Pro.put("MODEL", "Pixel 7 Pro");
         propsToChangePixel7Pro.put("FINGERPRINT", "google/cheetah/cheetah:13/TQ1A.230105.002.A1/9409646:user/release-keys");
+        propsToChangePixel7 = new HashMap<>();
+        propsToChangePixel7.put("BRAND", "google");
+        propsToChangePixel7.put("MANUFACTURER", "Google");
+        propsToChangePixel7.put("DEVICE", "panther");
+        propsToChangePixel7.put("PRODUCT", "panther");
+        propsToChangePixel7.put("MODEL", "Pixel 7");
+        propsToChangePixel7.put("FINGERPRINT", "google/panther/panther:13/TQ1A.230105.001.A3/9409513:user/release-keys");
         propsToChangePixel5 = new HashMap<>();
         propsToChangePixel5.put("BRAND", "google");
         propsToChangePixel5.put("MANUFACTURER", "Google");
@@ -234,6 +245,8 @@ public class PixelPropsUtils {
             } else {
                 if (Arrays.asList(packagesToChangePixel7Pro).contains(packageName)) {
                     propsToChange.putAll(propsToChangePixel7Pro);
+                } else if (Arrays.asList(packagesToChangePixel7).contains(packageName)) {
+                    propsToChange.putAll(propsToChangePixel7);
                 } else if (Arrays.asList(packagesToChangePixelXL).contains(packageName)) {
                     propsToChange.putAll(propsToChangePixelXL);
                 } else {
