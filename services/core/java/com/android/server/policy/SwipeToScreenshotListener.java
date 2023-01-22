@@ -31,7 +31,7 @@ public class SwipeToScreenshotListener implements PointerEventListener {
     private static final int THREE_GESTURE_STATE_DETECTED_FALSE = 2;
     private static final int THREE_GESTURE_STATE_DETECTED_TRUE = 3;
     private static final int THREE_GESTURE_STATE_NO_DETECT = 4;
-    private boolean mBootCompleted;
+    private int mBootCompleted;
     private Context mContext;
     private boolean mDeviceProvisioned = false;
     private float[] mInitMotionY;
@@ -54,13 +54,9 @@ public class SwipeToScreenshotListener implements PointerEventListener {
 
     @Override
     public void onPointerEvent(MotionEvent event) {
-        if (!mBootCompleted) {
-            mBootCompleted = SystemProperties.getBoolean("sys.boot_completed", false);
-            return;
-        }
-        if (!mDeviceProvisioned) {
-            mDeviceProvisioned = Settings.Global.getInt(mContext.getContentResolver(),
-                Settings.Global.DEVICE_PROVISIONED, 0) != 0;
+        mBootCompleted = Integer.parseInt(
+            SystemProperties.get("sys.boot_completed", "0"));
+        if (mBootCompleted == 0) {
             return;
         }
         if (event.getAction() == 0) {
