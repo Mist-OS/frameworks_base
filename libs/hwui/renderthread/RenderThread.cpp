@@ -44,6 +44,8 @@
 #include "renderstate/RenderState.h"
 #include "utils/TimeUtils.h"
 
+#include <processgroup/sched_policy.h>
+
 namespace android {
 namespace uirenderer {
 namespace renderthread {
@@ -427,7 +429,7 @@ void RenderThread::requestVsync() {
 }
 
 bool RenderThread::threadLoop() {
-    setpriority(PRIO_PROCESS, 0, PRIORITY_DISPLAY);
+    setpriority(PRIO_PROCESS, 0, PRIORITY_URGENT_DISPLAY);
     Looper::setForThread(mLooper);
     if (gOnStartHook) {
         gOnStartHook("RenderThread");
