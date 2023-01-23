@@ -19,6 +19,7 @@ package com.android.internal.util.crdroid;
 
 import android.app.Application;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.SystemProperties;
 import android.util.Log;
 
@@ -271,6 +272,7 @@ public class PixelPropsUtils {
                     sIsGms = true;
                     setPropValue("FINGERPRINT", "google/angler/angler:6.0/MDB08L/2343525:user/release-keys");
                     setPropValue("MODEL", "angler");
+                    setVersionField("DEVICE_INITIAL_SDK_INT", Build.VERSION_CODES.S);
                 }
                 return;
             }
@@ -331,6 +333,22 @@ public class PixelPropsUtils {
             field.setAccessible(false);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Log.e(TAG, "Failed to set prop " + key, e);
+        }
+    }
+
+    private static void setVersionField(String key, Integer value) {
+        try {
+            // Unlock
+            Field field = Build.VERSION.class.getDeclaredField(key);
+            field.setAccessible(true);
+
+            // Edit
+            field.set(null, value);
+
+            // Lock
+            field.setAccessible(false);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            Log.e(TAG, "Failed to spoof Build." + key, e);
         }
     }
 
