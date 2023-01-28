@@ -323,7 +323,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
         mScreenOffAnimationController = screenOffAnimationController;
         mVibratorHelper = vibrator;
         mWakeUpDelay = Integer.parseInt(
-                SystemProperties.get("persist.sys.screen.wakeup_delay", "1000"));
+                SystemProperties.get("persist.sys.screen.wakeup_delay", "0"));
 
         dumpManager.registerDumpable(getClass().getName(), this);
     }
