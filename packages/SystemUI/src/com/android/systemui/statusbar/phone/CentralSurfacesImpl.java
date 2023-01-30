@@ -3952,8 +3952,6 @@ public class CentralSurfacesImpl extends CoreStartable implements
                 }
                 ScarletSystemManager.startSystemIdleServices();
                 ScarletSystemManager.cacheCleaner(CentralSurfaces.getPackageManagerForUser(mContext, mLockscreenUserManager.getCurrentUserId()));
-                ScarletSystemManager.startBoostingService(Settings.System.getIntForUser(mContext.getContentResolver(),
-                                Settings.System.SCARLET_SYSTEM_BOOST, 0, mLockscreenUserManager.getCurrentUserId()) == 1);
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
                                         Settings.Secure.SCARLET_AGGRESSIVE_IDLE_MODE, 0, mLockscreenUserManager.getCurrentUserId()) == 1) {
                     Settings.Secure.putIntForUser(mContext.getContentResolver(),
@@ -3995,8 +3993,6 @@ public class CentralSurfacesImpl extends CoreStartable implements
             if (Settings.System.getIntForUser(mContext.getContentResolver(),
                                     Settings.System.SCARLET_SYSTEM_MANAGER, 0, mLockscreenUserManager.getCurrentUserId()) == 1) {
                 ScarletSystemManager.stopManager(mContext);
-                ScarletSystemManager.startBoostingService(Settings.System.getIntForUser(mContext.getContentResolver(),
-                                    Settings.System.SCARLET_SYSTEM_BOOST, 0, mLockscreenUserManager.getCurrentUserId()) == 1);
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
                                             Settings.Secure.SCARLET_AGGRESSIVE_IDLE_MODE, 0, mLockscreenUserManager.getCurrentUserId()) == 1) {
                     Settings.Secure.putIntForUser(mContext.getContentResolver(),
