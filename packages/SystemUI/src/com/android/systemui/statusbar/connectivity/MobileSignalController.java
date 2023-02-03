@@ -19,6 +19,7 @@ import static com.android.settingslib.mobile.MobileMappings.getDefaultIcons;
 import static com.android.settingslib.mobile.MobileMappings.getIconKey;
 import static com.android.settingslib.mobile.MobileMappings.mapIconSets;
 
+import android.annotation.UiThread;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -473,11 +474,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         queryImsState();
     }
 
+    @UiThread
     @Override
     public void notifyListeners(SignalCallback callback) {
-        new Handler(mContext.getMainLooper()).post(new Runnable() {
-        @Override
-        public void run() {
         // If the device is on carrier merged WiFi, we should let WifiSignalController to control
         // the SysUI states.
         if (mNetworkController.isCarrierMergedWifi(mSubscriptionInfo.getSubscriptionId())) {
@@ -515,8 +514,6 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                 sbInfo.showTriangle,
                 mCurrentState.isDefault);
         callback.setMobileDataIndicators(mobileDataIndicators);
-        }
-    });
     }
 
     private QsInfo getQsInfo(String contentDescription, int dataTypeIcon) {
