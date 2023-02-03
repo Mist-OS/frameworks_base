@@ -135,8 +135,6 @@ public class CameraDeviceImpl extends CameraDevice
     private final int mTotalPartialCount;
     private final Context mContext;
 
-    private final boolean mForceMultiResolution;
-
     private static final long NANO_PER_SECOND = 1000000000; //ns
 
     /**
@@ -310,9 +308,6 @@ public class CameraDeviceImpl extends CameraDevice
             mTotalPartialCount = partialCount;
         }
         mIsPrivilegedApp = checkPrivilegedAppList();
-
-        mForceMultiResolution = mContext.getResources().getBoolean(
-                com.android.internal.R.bool.config_forceMultiResolution);
     }
 
     public CameraDeviceCallbacks getCallbacks() {
@@ -1520,15 +1515,6 @@ public class CameraDeviceImpl extends CameraDevice
         return false;
     }
 
-    private String getMatchingSubstring(String packagename, List<String> whitelists) {
-        for (String whitelist : whitelists) {
-            if (packagename.contains(whitelist)) {
-                return whitelist;
-            }
-        }
-        return null;
-    }
-
     private boolean checkPrivilegedAppList() {
         String packageName = ActivityThread.currentOpPackageName();
         String packageList = SystemProperties.get("persist.vendor.camera.privapp.list");
@@ -1538,27 +1524,11 @@ public class CameraDeviceImpl extends CameraDevice
          * persist.camera.manufacturer=oneplus
          * persist.camera.oem.package=com.oneplus.camera
          */
-        String deviceManufacturer = SystemProperties.get("persist.camera.manufacturer", "com.android");
-        String cameraPackage = SystemProperties.get("persist.camera.oem.package", "com.android.camera");
+        String deviceManufacturer = SystemProperties.get("persist.camera.manufacturer", "");
+        String cameraPackage = SystemProperties.get("persist.camera.oem.package", "");
 
-        /**
-         * System default whitelist
-         */
-        List<String> defList = Arrays.asList(
-           // common camera processes, list the initial strings since we are using .contains method
-            "aperture",
-            "com.android.camera",
-            "faceunlock",
-            "google",
-            "grapheneos"
-        );
-
-        String prebuiltCameraApp = getMatchingSubstring(packageName, defList);
-
-        if (packageName.toLowerCase().contains(cameraPackage)
-            || packageName.toLowerCase().contains(deviceManufacturer)
-            || prebuiltCameraApp != null
-            ) {
+        if (!cameraPackage.equals("") && packageName.toLowerCase().contains(cameraPackage) 
+        	|| !deviceManufacturer.equals("") && packageName.toLowerCase().contains(deviceManufacturer)) {
             return true;
         }
 
@@ -1584,7 +1554,7 @@ public class CameraDeviceImpl extends CameraDevice
             return;
         }
         int inputFormat = inputConfig.getFormat();
-        if (inputConfig.isMultiResolution() || mForceMultiResolution) {
+        if (inputConfig.isMultiResolution()) {
             MultiResolutionStreamConfigurationMap configMap = mCharacteristics.get(
                     CameraCharacteristics.SCALER_MULTI_RESOLUTION_STREAM_CONFIGURATION_MAP);
 
@@ -1624,15 +1594,21 @@ public class CameraDeviceImpl extends CameraDevice
                 Log.w(TAG, "ignore input format/size check for white listed app");
                 return;
             }
+
             boolean skipInputConfigCheck =
-                SystemProperties.getBoolean("persist.camera.skip_input_config_check", true);
-            if (!skipInputConfigCheck) {
-              if (!checkInputConfigurationWithStreamConfigurations(inputConfig, /*maxRes*/false) &&
-                      !checkInputConfigurationWithStreamConfigurations(inputConfig, /*maxRes*/true)) {
-                  throw new IllegalArgumentException("Input config with format " +
-                          inputFormat + " and size " + inputConfig.getWidth() + "x" +
-                          inputConfig.getHeight() + " not supported by camera id " + mCameraId);
-              }
+                SystemProperties.getBoolean("persist.camera.skip_input_config_check", false);
+
+            if (skipInputConfigCheck) {
+                Log.w(TAG, "This should not happen if camera package is on priv list");
+                return;
+            }
+              
+            if (!checkInputConfigurationWithStreamConfigurations(inputConfig, /*maxRes*/false) &&
+                    !checkInputConfigurationWithStreamConfigurations(inputConfig, /*maxRes*/true)) {
+                throw new IllegalArgumentException("Input config with format " +
+                        inputFormat + " and size " + inputConfig.getWidth() + "x" +
+                        inputConfig.getHeight() + " not supported by camera id " + mCameraId);
+
             }
         }
     }
