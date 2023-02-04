@@ -110,7 +110,8 @@
     <com.android.systemui.tuner.StatusBarSwitch
         android:icon="@drawable/ic_statusbar_phone"
         android:key="call_strength"
-        android:title="@string/status_bar_call_strength" />
+        android:title="@string/status_bar_call_strength"
+        sysui:defValue="false" />
 
     <com.android.systemui.tuner.StatusBarSwitch
         android:icon="@drawable/ic_statusbar_vpn"
